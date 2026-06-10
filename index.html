@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Клан ГРОЗА</title>
+    
+    <link rel="icon" type="image/png" href="/join/logo.png">
+    <link rel="apple-touch-icon" href="/join/logo.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --bg-dark: #0f0f13;
+            --bg-card: #1e1e24;
+            --text-light: #ffffff;
+            --text-gray: #b2bec3;
+            --accent-glow: rgba(108, 92, 231, 0.4);
+            --discord-color: #5865F2;
+            --minecraft-color: #578a3e;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --gold: #f1c40f;
+            --alliance-color: #ff7675;
+        }
+
+        /* --- СТИЛІЗАЦІЯ СКРОЛБАРУ --- */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f0f13;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 5px;
+            border: 2px solid #0f0f13;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* --- ВІДЕО НА ФОНІ --- */
+        .video-bg-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -3;
+            overflow: hidden;
+            background-color: var(--bg-dark);
+        }
+
+        .video-bg-container video {
+            position: absolute;
+            top: 50%; left: 50%;
+            min-width: 100%; min-height: 100%;
+            width: auto; height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            filter: blur(8px) brightness(0.4); 
+        }
+
+        /* --- МАКСИМАЛЬНІ КІНЕМАТОГРАФІЧНІ АНІМАЦІЇ --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-5px); }
+            60% { transform: translateY(-3px); }
+        }
+
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0.5); }
+            70% { box-shadow: 0 0 0 15px rgba(241, 196, 15, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0); }
+        }
+
+        @keyframes pulse-secondary {
+            0% { box-shadow: 0 0 0 0 rgba(162, 155, 254, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(162, 155, 254, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(162, 155, 254, 0); }
+        }
+
+        @keyframes pulse-alliance {
+            0% { box-shadow: 0 0 0 0 rgba(255, 118, 117, 0.5); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 118, 117, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 118, 117, 0); }
+        }
+
+        /* Потужне 3D інтро для Альянсу */
+        @keyframes introAllianceIn {
+            0% { opacity: 0; transform: scale(0.8) translateY(40px); filter: blur(10px); letter-spacing: 25px; }
+            100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); letter-spacing: 12px; }
+        }
+
+        @keyframes introGromIn {
+            0% { opacity: 0; transform: scale(0.85); filter: blur(6px); text-shadow: 0 0px 0px rgba(255,255,255,0); }
+            50% { text-shadow: 0 0 30px rgba(255, 255, 255, 0.9); }
+            100% { opacity: 1; transform: scale(1); filter: blur(0); text-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        }
+
+        @keyframes introFadeOut {
+            0% { opacity: 1; filter: blur(0) brightness(1); transform: scale(1); }
+            100% { opacity: 0; filter: blur(20px) brightness(0); transform: scale(1.05); visibility: hidden; }
+        }
+
+        @keyframes contentFadeIn {
+            0% { opacity: 0; transform: scale(0.96) translateY(25px); filter: blur(6px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+        }
+
+        @keyframes scanline {
+            0% { top: -10%; opacity: 1; }
+            100% { top: 110%; opacity: 0; }
+        }
+
+        .reveal { opacity: 0; animation: fadeInUp 1.2s ease-out forwards; }
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.5s; }
+        .delay-3 { animation-delay: 0.8s; }
+
+        .bg-pattern {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(108, 92, 231, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(162, 155, 254, 0.1) 0%, transparent 40%),
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            z-index: -2;
+        }
+
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 20px 5%;
+            display: flex; justify-content: center; align-items: center;
+            background: rgba(15, 15, 19, 0.75);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo { 
+            font-weight: 900; font-size: 2.2rem; color: #fff; 
+            text-decoration: none; letter-spacing: 6px; text-transform: uppercase;
+            text-shadow: 0 0 12px rgba(108, 92, 231, 0.6), 0 0 25px rgba(108, 92, 231, 0.3);
+        }
+
+        /* --- HERO СЕКЦІЯ --- */
+        .hero {
+            min-height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 140px 24px 60px;
+        }
+
+        .hero h1 { font-size: clamp(3rem, 10vw, 5.5rem); font-weight: 900; margin-bottom: 10px; line-height: 1.1; letter-spacing: 4px; text-shadow: 0 0 25px rgba(108, 92, 231, 0.5); }
+        
+        .coords-badge {
+            background: rgba(108, 92, 231, 0.1);
+            border: 1px solid rgba(108, 92, 231, 0.3);
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(108, 92, 231, 0.15);
+            backdrop-filter: blur(5px);
+        }
+        .coords-badge span { color: var(--gold); font-family: monospace; font-size: 1.1rem; }
+
+        .hero p { font-size: 1.2rem; color: var(--text-gray); max-width: 700px; margin-bottom: 40px; }
+
+        .btn-container { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-bottom: 40px; width: 100%; max-width: 600px; }
+        
+        .btn {
+            padding: 16px 32px; border-radius: 14px; font-weight: 800; text-transform: uppercase;
+            text-decoration: none; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; display: inline-flex;
+            align-items: center; justify-content: center; gap: 10px;
+            letter-spacing: 0.5px; border: none; font-size: 0.9rem;
+        }
+
+        .btn-rules { border: 2px solid var(--primary); color: white; background: rgba(108, 92, 231, 0.1); }
+        .btn-rules:hover { background: var(--primary); box-shadow: 0 0 25px var(--accent-glow); transform: translateY(-2px); }
+
+        .btn-join { background: var(--primary); color: white; box-shadow: 0 8px 25px var(--accent-glow); }
+        .btn-join:hover { transform: translateY(-3px); box-shadow: 0 12px 30px var(--accent-glow); }
+
+        .btn-alliance { border: 2px solid var(--alliance-color); color: white; background: rgba(255, 118, 117, 0.1); }
+        .btn-alliance:hover { background: var(--alliance-color); box-shadow: 0 0 25px rgba(255, 118, 117, 0.4); transform: translateY(-2px); }
+
+        .btn-map { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.1); }
+        .btn-map:hover { border-color: white; background: rgba(255,255,255,0.05); transform: translateY(-2px); }
+
+        .contacts-wrapper { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 900px; margin-top: 10px; }
+        .contact-stack { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 280px; align-items: center; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(5px); }
+        
+        .copy-box {
+            background: rgba(0,0,0,0.3); padding: 12px 20px;
+            border-radius: 50px; border: 1px solid rgba(255,255,255,0.05);
+            display: flex; align-items: center; gap: 12px; cursor: pointer;
+            transition: 0.3s; width: 100%; font-size: 0.9rem;
+        }
+        .copy-box.ds-box:hover { background: rgba(88, 101, 242, 0.15); border-color: var(--discord-color); transform: scale(1.03); }
+        .copy-box.mc-box:hover { background: rgba(87, 138, 62, 0.15); border-color: var(--minecraft-color); transform: scale(1.03); }
+
+        .indicator { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-top: 5px; }
+        .indicator i { color: var(--gold); font-size: 1rem; animation: bounce 2s infinite; }
+        .indicator span { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--text-gray); }
+
+        /* --- МОДАЛЬНІ ВІКНА --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(20px);
+            display: none; justify-content: center; align-items: center;
+            z-index: 2000; opacity: 0; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        
+        .modal-content {
+            background: var(--bg-card); padding: 40px; border-radius: 30px;
+            max-width: 600px; width: 100%; text-align: center;
+            border: 1px solid var(--primary); transform: translateY(30px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 90vh; overflow-y: auto;
+            position: relative;
+            -webkit-overflow-scrolling: touch;
+        }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+
+        /* Кнопка швидкого закриття (Хрестик) */
+        .modal-close-x {
+            position: absolute;
+            top: 25px; right: 25px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            width: 46px; height: 46px;
+            border-radius: 50%;
+            color: rgba(255,255,255,0.6);
+            font-size: 1.2rem;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+        .modal-close-x:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transform: rotate(90deg) scale(1.05);
+        }
+        
+        /* Кнопка закриття альянсу - плавне з'явлення */
+        .modal-close-x.alliance-close-x {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .modal-close-x.alliance-close-x.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1.1);
+        }
+        .modal-close-x.alliance-close-x.active:hover {
+            transform: scale(1.3) rotate(90deg);
+            box-shadow: 0 0 15px var(--alliance-color);
+            color: #fff;
+        }
+
+        /* КІНЕМАТОГРАФІЧНА МОДАЛКА АЛЬЯНСУ */
+        .modal-alliance-content {
+            max-width: 1200px !important;
+            width: 95% !important;
+            height: 85vh;
+            border-color: var(--alliance-color) !important;
+            background: rgba(12, 12, 16, 0.99) !important;
+            box-shadow: 0 0 60px rgba(255, 118, 117, 0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            overflow-y: auto !important;
+            padding: 50px 40px !important;
+            position: relative;
+        }
+
+        /* Лазерна лінія сканування */
+        .modal-alliance-content::after {
+            content: '';
+            position: absolute;
+            left: 0; width: 100%; height: 8px;
+            background: linear-gradient(90deg, transparent, var(--alliance-color), transparent);
+            box-shadow: 0 0 20px var(--alliance-color);
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: 15;
+            animation: scanline 1.2s ease-out forwards;
+            animation-iteration-count: infinite;
+        }
+        .modal-alliance-content:not(.scanning)::after {
+            animation-play-state: paused;
+            opacity: 0;
+        }
+
+        .alliance-intro-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #08080a;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 10;
+        }
+
+        .alliance-main-content {
+            opacity: 0;
+            width: 100%;
+            display: flex; flex-direction: column;
+            align-items: center;
+        }
+
+        .rules-grid { text-align: left; margin-top: 25px; display: flex; flex-direction: column; gap: 15px; }
+        .rule-item {
+            background: rgba(255,255,255,0.02); padding: 20px; border-radius: 18px;
+            border-left: 4px solid var(--primary); display: flex; gap: 15px; align-items: flex-start;
+        }
+        .rule-item i { color: var(--primary); font-size: 1.2rem; margin-top: 3px; }
+        .rule-item h4 { color: #fff; margin-bottom: 5px; font-weight: 700; }
+        .rule-item p { font-size: 0.9rem; color: var(--text-gray); margin: 0; line-height: 1.4; }
+
+        .btn-submit {
+            width: 100%; padding: 16px; border-radius: 14px; background: var(--primary);
+            color: white; font-weight: 900; border: none; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 20px var(--accent-glow); }
+
+        /* МАПА */
+        .modal-map-content { max-width: 800px !important; }
+        .map-img { width: 100%; border-radius: 15px; margin: 20px 0; border: 2px solid var(--primary); box-shadow: 0 0 30px rgba(108, 92, 231, 0.3); }
+
+        /* --- СЕКЦІЇ --- */
+        .section { padding: 100px 5%; max-width: 1200px; margin: 0 auto; }
+        .section-title { text-align: center; margin-bottom: 60px; }
+        .section-title h2 { font-size: 2.5rem; margin-bottom: 15px; font-weight: 800; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        
+        .card { background: rgba(30, 30, 36, 0.6); backdrop-filter: blur(5px); padding: 45px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        .card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(108, 92, 231, 0.15); }
+        .card i { font-size: 2.5rem; color: var(--primary); margin-bottom: 25px; }
+
+        /* --- КОМАНДА ВЕЛИКА СЕТКА --- */
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; justify-content: center; max-width: 900px; margin: 0 auto; width: 100%; }
+        .team-card { background: rgba(255,255,255,0.01); backdrop-filter: blur(5px); padding: 35px 20px; border-radius: 25px; text-align: center; border: 1px solid rgba(255,255,255,0.03); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+        .team-card:hover { transform: translateY(-8px) scale(1.02); border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); }
+
+        .leader-card { border: 1px solid rgba(241, 196, 15, 0.2); background: linear-gradient(145deg, rgba(30,30,36,0.8) 0%, rgba(20,20,25,0.8) 100%); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .leader-card:hover { border-color: var(--gold); box-shadow: 0 15px 40px rgba(241, 196, 15, 0.25); }
+
+        .alliance-leader-card { border: 1px solid rgba(255, 118, 117, 0.3); background: linear-gradient(145deg, rgba(35,25,25,0.8) 0%, rgba(20,15,15,0.8) 100%); }
+        .alliance-leader-card:hover { border-color: var(--alliance-color); box-shadow: 0 15px 40px rgba(255, 118, 117, 0.3); }
+
+        .citizen-card { border: 1px solid rgba(162, 155, 254, 0.15); background: linear-gradient(145deg, rgba(30,30,36,0.6) 0%, rgba(15,15,20,0.6) 100%); }
+        .citizen-card:hover { border-color: var(--secondary); box-shadow: 0 15px 40px rgba(162, 155, 254, 0.15); }
+
+        .avatar-leader {
+            width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 20px;
+            display: flex; align-items: center; justify-content: center; font-size: 2.8rem;
+            background: radial-gradient(circle, rgba(241, 196, 15, 0.15) 0%, rgba(0,0,0,0) 70%);
+            border: 3px solid var(--gold); color: var(--gold); text-shadow: 0 0 15px var(--gold);
+            animation: pulse-gold 2s infinite;
+        }
+
+        .avatar-alliance-leader {
+            width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 20px;
+            display: flex; align-items: center; justify-content: center; font-size: 2.8rem;
+            background: radial-gradient(circle, rgba(255, 118, 117, 0.15) 0%, rgba(0,0,0,0) 70%);
+            border: 3px solid var(--alliance-color); color: var(--alliance-color); text-shadow: 0 0 15px var(--alliance-color);
+            animation: pulse-alliance 2s infinite;
+        }
+
+        .avatar-citizen {
+            width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 20px;
+            display: flex; align-items: center; justify-content: center; font-size: 2.8rem;
+            background: radial-gradient(circle, rgba(162, 155, 254, 0.15) 0%, rgba(0,0,0,0) 70%);
+            border: 3px solid var(--secondary); color: var(--secondary); text-shadow: 0 0 15px var(--secondary);
+            animation: pulse-secondary 2s infinite;
+        }
+
+        .role { font-size: 0.75rem; text-transform: uppercase; color: var(--text-gray); font-weight: 700; letter-spacing: 1.5px; margin-bottom: 5px; }
+        .name { font-size: 1.35rem; font-weight: 700; color: white; }
+
+        /* --- АДАПТИВНІСТЬ ПІД ТЕЛЕФОНИ --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.8rem; }
+            .coords-badge { font-size: 0.95rem; padding: 8px 20px; }
+            .btn-container { flex-direction: column; width: 100%; gap: 12px; }
+            .btn { width: 100%; padding: 15px 20px; }
+            .section { padding: 60px 20px; }
+            .section-title h2 { font-size: 1.9rem; }
+            .contacts-wrapper { flex-direction: column; align-items: center; }
+            .modal-overlay { padding: 0; }
+            .modal-content { max-height: 100vh; height: 100vh; border-radius: 0; padding: 60px 20px 30px; border: none; }
+            .modal-alliance-content { width: 100% !important; height: 100vh !important; border-radius: 0 !important; padding: 70px 20px 40px !important; }
+            .modal-close-x { top: 15px; right: 15px; width: 42px; height: 42px; font-size: 1.1rem; }
+            .team-grid { grid-template-columns: 1fr; gap: 20px; }
+            .card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ВІДЕО-ФОН -->
+    <div class="video-bg-container">
+        <video autoplay loop muted playsinline>
+            <source src="video/молнії.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div class="bg-pattern"></div>
+
+    <!-- МОДАЛКА ПРАВИЛ КЛАНУ -->
+    <div class="modal-overlay" id="rulesModal">
+        <div class="modal-content" style="max-width: 650px;">
+            <button class="modal-close-x" onclick="closeAllModals()"><i class="fas fa-times"></i></button>
+            <h2 style="font-weight: 900; color: var(--primary); margin-bottom: 5px;">КОДЕКС КЛАНУ</h2>
+            <p style="color: var(--text-gray); font-size: 0.9rem;">Обов'язково до ознайомлення кожному учаснику</p>
+            <div class="rules-grid">
+                <div class="rule-item"><i class="fas fa-home"></i><div><h4>Право на житло</h4><p>Кожному учаснику клану без виключення надається безоплатне место для проживання на території клану.</p></div></div>
+                <div class="rule-item" style="border-color: var(--warning);"><i class="fas fa-seedling"></i><div><h4>Принцип відтворення</h4><p>Якщо ви берете їжу з громадських ферм або ресурси з загальних складів — ви зобов'язані засадити або поповнити те, що використали.</p></div></div>
+                <div class="rule-item"><i class="fas fa-hammer"></i><div><h4>Спільний розвиток</h4><p>Кожен мешканець за можливості та необхідності має брати участь у спільних будівництвах та проєктах для добробуту клану.</p></div></div>
+                <div class="rule-item" style="border-color: #ff7675;"><i class="fas fa-shield-alt"></i><div><h4>Взаємоповага</h4><p>Будь-які конфлікти всередині клану вирішуються через діалог або за посередництва Лідера. Гриферство та крадіжки — бан.</p></div></div>
+            </div>
+            <button class="btn-submit" style="margin-top: 30px;" onclick="closeAllModals()">Я ознайомився(-лась)</button>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА ДЛЯ АНКЕТИ -->
+    <div class="modal-overlay" id="joinModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close-x" onclick="closeAllModals()"><i class="fas fa-times"></i></button>
+            <i class="fab fa-discord" style="font-size: 4rem; color: var(--discord-color); margin-bottom: 20px;"></i>
+            <h2 style="font-weight: 900; color: #fff; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;">Вступ до клану</h2>
+            <p style="color: var(--text-gray); font-size: 1.1rem; line-height: 1.5; margin-bottom: 25px;">
+                Наразі анкетна система спрощена. Будь ласка, напишіть у приватні повідомлення в діскорд лідеру:
+            </p>
+            <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 14px; border: 1px dashed var(--primary); font-size: 1.3rem; font-weight: 800; color: var(--gold); margin-bottom: 30px;">
+                moorechik02
+            </div>
+            <button class="btn-submit" onclick="closeAllModals()">Зрозуміло</button>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА ТЕРИТОРІЇ -->
+    <div class="modal-overlay" id="mapModal">
+        <div class="modal-content modal-map-content">
+            <button class="modal-close-x" onclick="closeAllModals()"><i class="fas fa-times"></i></button>
+            <h2 style="font-weight: 900;">НАША ТЕРИТОРІЯ</h2>
+            <img src="https://i.postimg.cc/CL9KNSMY/teritoria.jpg" class="map-img" alt="Map">
+            <p style="color: var(--text-gray); font-size: 0.9rem;">Оновлена мапа території клану. Стратегічне розташування та розширені межі володінь.</p>
+            <button class="btn btn-join" style="margin-top: 20px; width: 100%;" onclick="closeAllModals()">Зрозуміло</button>
+        </div>
+    </div>
+
+    <!-- ВЕЛИКА КІНЕМАТОГРАФІЧНА МОДАЛКА АЛЬЯНСУ -->
+    <div class="modal-overlay" id="allianceModal">
+        <div class="modal-content modal-alliance-content" id="allianceContainer">
+            
+            <!-- Хрестик закриття -->
+            <button class="modal-close-x alliance-close-x" id="allianceCloseBtn" onclick="closeAllModals()"><i class="fas fa-times"></i></button>
+            
+            <!-- ЕКРАН КІНО-ІНТРО -->
+            <div class="alliance-intro-screen" id="allianceIntro">
+                <h1 id="introWord1" style="font-weight: 900; font-size: clamp(2.5rem, 6vw, 5.5rem); color: var(--alliance-color); text-transform: uppercase; text-shadow: 0 0 35px rgba(255, 118, 117, 0.7); opacity: 0; transform-origin: center;">АЛЬЯНС</h1>
+                <h2 id="introWord2" style="font-weight: 700; font-size: clamp(1.2rem, 4vw, 2.5rem); color: #fff; letter-spacing: 5px; margin-top: 25px; opacity: 0; text-transform: uppercase;">ГРОЗА <span style="color: var(--alliance-color);">//</span> Гетьманщина</h2>
+            </div>
+
+            <!-- ОСНОВНИЙ КОНТЕНТ -->
+            <div class="alliance-main-content" id="allianceMain">
+                <h2 style="font-weight: 900; font-size: clamp(1.8rem, 6vw, 2.8rem); color: #fff; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px;">Союзні Володіння</h2>
+                <div style="width: 80px; height: 4px; background: var(--alliance-color); margin-bottom: 30px; border-radius: 2px;"></div>
+                
+                <p style="color: var(--text-gray); font-size: 1.15rem; max-width: 800px; margin: 0 auto 40px; line-height: 1.7; text-align: center;">
+                    Наш клан перебуває в офіційному, міцному союзі з кланом <strong style="color: var(--alliance-color);">Гетьманщина</strong>. Разом ми об'єднуємо сили задля домінування, взаємодопомоги та спільного захисту наших територій від будь-яких ворогів.
+                </p>
+                
+                <h3 style="font-weight: 800; text-transform: uppercase; letter-spacing: 3px; color: var(--alliance-color); margin-bottom: 30px; font-size: 1.2rem;">Керівництво клану Гетьманщина</h3>
+                
+                <div class="team-grid" style="max-width: 700px;">
+                    <!-- Засновник Гетьманщина -->
+                    <div class="team-card alliance-leader-card">
+                        <div class="avatar-alliance-leader">⚔️</div>
+                        <div class="role" style="color: var(--alliance-color);">Засновник</div>
+                        <div class="name">Gansar</div>
+                    </div>
+                    <!-- Права рука Гетьманщина -->
+                    <div class="team-card citizen-card" style="border-color: rgba(255, 118, 117, 0.2);">
+                        <div class="avatar-citizen" style="border-color: var(--alliance-color); color: var(--alliance-color); animation: pulse-alliance 2s infinite;">🛡️</div>
+                        <div class="role" style="color: var(--alliance-color);">Права рука</div>
+                        <div class="name">cuchik_yo</div>
+                    </div>
+                </div>
+                
+                <button class="btn-submit" style="margin-top: 45px; max-width: 300px; background: var(--alliance-color);" onclick="closeAllModals()">Закрити сторінку</button>
+            </div>
+
+        </div>
+    </div>
+
+    <nav><a href="#" class="logo">ГРОЗА</a></nav>
+
+    <section class="hero reveal delay-1">
+        <h1>ГРОЗА</h1>
+        <div class="coords-badge">
+            <i class="fas fa-map-marker-alt" style="color: var(--primary);"></i> Координати: <span>x: -3564 70 3372</span>
+        </div>
+        <p>Ми не просто гравці, ми — сім'я. Отримуй найкращі умови для старту та розвивайся разом з нами.</p>
+        <div class="btn-container">
+            <button class="btn btn-rules" onclick="openModal('rulesModal')"><i class="fas fa-scroll"></i> Правила Клану</button>
+            <button class="btn btn-join" onclick="openModal('joinModal')">Анкета на вступ</button>
+            <button class="btn btn-alliance" onclick="openAllianceWithIntro()"><i class="fas fa-shield-halved"></i> Альянс</button>
+            <button class="btn btn-map" onclick="openModal('mapModal')"><i class="fas fa-map-marked-alt"></i> Територія</button>
+        </div>
+        
+        <div class="contacts-wrapper">
+            <!-- Блок Власника -->
+            <div class="contact-stack">
+                <div class="copy-box mc-box" onclick="copyNick(this, 'Moorechik')">
+                    <i class="fas fa-cube" style="color: var(--minecraft-color);"></i>
+                    <span>Moorechik</span>
+                    <i class="far fa-copy" style="margin-left: auto; opacity: 0.3;"></i>
+                </div>
+                <div class="copy-box ds-box" onclick="copyNick(this, 'moorechik02')">
+                    <i class="fab fa-discord" style="color: var(--discord-color);"></i>
+                    <span>moorechik02</span>
+                    <i class="far fa-copy" style="margin-left: auto; opacity: 0.3;"></i>
+                </div>
+                <div class="indicator"><i class="fas fa-chevron-up"></i><span> Власник клану</span></div>
+            </div>
+
+            <!-- Блок Співвласника -->
+            <div class="contact-stack">
+                <div class="copy-box mc-box" onclick="copyNick(this, 'Faust')">
+                    <i class="fas fa-cube" style="color: var(--minecraft-color);"></i>
+                    <span>Faust</span>
+                    <i class="far fa-copy" style="margin-left: auto; opacity: 0.3;"></i>
+                </div>
+                <div class="copy-box ds-box" onclick="copyNick(this, 'mars_2873')">
+                    <i class="fab fa-discord" style="color: var(--discord-color);"></i>
+                    <span>mars_2873</span>
+                    <i class="far fa-copy" style="margin-left: auto; opacity: 0.3;"></i>
+                </div>
+                <div class="indicator"><i class="fas fa-chevron-up"></i><span> Співвласник клану</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section reveal delay-2">
+        <div class="section-title">
+            <span style="color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 2px;">Чому саме ми?</span>
+            <h2>Наші переваги</h2>
+        </div>
+        <div class="grid">
+            <div class="card"><i class="fas fa-home"></i><h3>Безкоштовне житло</h3><p>Кожен отримує сучасне житло або місце для забудови з усіма зручностями без жодних оплат.</p></div>
+            <div class="card"><i class="fas fa-bread-slice"></i><h3>Повне забезпечення</h3><p>Ми ділимося ресурсами. Їжа, інструменти та базові матеріали завжди доступні для новачків.</p></div>
+            <div class="card"><i class="fas fa-hands-helping"></i><h3>Досвідчена команда</h3><p>Допоможемо розібратися з механіками сервера та надійно захистимо від небажаних гостей.</p></div>
+        </div>
+    </section>
+
+    <section class="section reveal delay-3" style="background: rgba(255,255,255,0.015); border-radius: 50px; border: 1px solid rgba(255,255,255,0.03);">
+        <div class="section-title">
+            <span style="color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 2px;">Admins</span>
+            <h2>Керівництво</h2>
+        </div>
+        
+        <div class="team-grid" style="margin-bottom: 50px; max-width: 650px;">
+            <div class="team-card leader-card">
+                <div class="avatar-leader">👑</div>
+                <div class="role" style="color: var(--gold);">Власник клану</div>
+                <div class="name">Moorechik</div>
+            </div>
+            <div class="team-card leader-card" style="border-color: rgba(241, 196, 15, 0.4);">
+                <div class="avatar-leader" style="border-color: var(--secondary); color: var(--secondary); text-shadow: 0 0 15px var(--secondary); animation: pulse-secondary 2s infinite;">👑</div>
+                <div class="role" style="color: var(--secondary);">Співвласник</div>
+                <div class="name">Faust</div>
+            </div>
+        </div>
+
+        <div class="section-title" style="margin-bottom: 40px;">
+            <span style="color: var(--secondary); font-weight: 800; text-transform: uppercase; letter-spacing: 2px;">Citizens</span>
+            <h2 style="font-size: 2rem;">Жителі клану</h2>
+        </div>
+
+        <div class="team-grid" style="max-width: 350px;">
+            <div class="team-card citizen-card">
+                <div class="avatar-citizen">🔥</div>
+                <div class="role" style="color: var(--secondary);">Житель клану</div>
+                <div class="name">Fenix</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p style="font-weight: 700; margin-bottom: 10px; letter-spacing: 1px;">Клан ГРОЗА &copy; 2026</p>
+        <p style="font-size: 0.8rem; color: var(--text-gray); max-width: 500px; margin: 0 auto; opacity: 0.7;">Код сайту був адаптований та вдосконалений для клану ГРОЗА.</p>
+    </footer>
+
+    <!-- КЕРУВАННЯ МОДАЛКАМИ ТА КОПІЮВАННЯМ -->
+    <script>
+        function openModal(id) { 
+            const modal = document.getElementById(id); 
+            modal.style.display = 'flex'; 
+            setTimeout(() => modal.classList.add('active'), 10); 
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        // Кінематографічна логіка появи Модалки Альянсу з ефектами на повну потужність
+        function openAllianceWithIntro() {
+            const modal = document.getElementById('allianceModal');
+            const container = document.getElementById('allianceContainer');
+            const introScreen = document.getElementById('allianceIntro');
+            const mainContent = document.getElementById('allianceMain');
+            const closeBtn = document.getElementById('allianceCloseBtn');
+            const word1 = document.getElementById('introWord1');
+            const word2 = document.getElementById('introWord2');
+
+            // Скидаємо все до початкового стану
+            container.classList.remove('scanning');
+            introScreen.style.display = 'flex';
+            introScreen.style.animation = 'none';
+            mainContent.style.opacity = '0';
+            mainContent.style.animation = 'none';
+
+            closeBtn.classList.remove('active'); // Ховаємо кнопку закриття спочатку
+            
+            word1.style.opacity = '0';
+            word1.style.animation = 'none';
+            word2.style.opacity = '0';
+            word2.style.animation = 'none';
+
+            // Відкриваємо оверлей
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
+            document.body.style.overflow = 'hidden';
+
+            // Етап 1: Поява слова "АЛЬЯНС"
+            setTimeout(() => {
+                word1.style.animation = 'introAllianceIn 1.0s cubic-bezier(0.25, 1, 0.5, 1) forwards';
+            }, 300);
+
+            // Етап 2: Спалах слова "ГРОЗА // Гетьманщина"
+            setTimeout(() => {
+                word2.style.animation = 'introGromIn 1.0s cubic-bezier(0.25, 1, 0.5, 1) forwards';
+            }, 1500);
+
+            // Етап 3: Розмиття заставки, запуск лазера-сканування та відображення контенту
+            setTimeout(() => {
+                introScreen.style.animation = 'introFadeOut 0.9s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards';
+
+                setTimeout(() => {
+                    introScreen.style.display = 'none';
+                    container.classList.add('scanning');
+                    mainContent.style.animation = 'contentFadeIn 1.0s cubic-bezier(0.25, 1, 0.5, 1) forwards';
+                    mainContent.style.opacity = '1';
+
+                    // Показуємо кнопку закриття з анімацією
+                    closeBtn.classList.add('active');
+                }, 900);
+
+            }, 3200);
+        }
+
+        function closeAllModals() { 
+            document.querySelectorAll('.modal-overlay').forEach(m => { 
+                m.classList.remove('active'); 
+                setTimeout(() => { m.style.display = 'none'; }, 400); 
+            }); 
+            document.body.style.overflow = 'auto'; 
+        }
+
+        function copyNick(element, nick) { 
+            navigator.clipboard.writeText(nick).then(() => { 
+                const span = element.querySelector('span'); 
+                const original = span.innerText; 
+                span.innerText = "Скопійовано!"; 
+                setTimeout(() => span.innerText = original, 2000); 
+            }); 
+        }
+
+        /* --- ЗАХИСТ КОДУ ВІД КРАДІЖКИ --- */
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.key === "F12" ||
+                (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "i" || e.key === "J" || e.key === "j" || e.key === "C" || e.key === "c")) ||
+                (e.ctrlKey && (e.key === "U" || e.key === "u" || e.key === "S" || e.key === "s"))
+            ) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
+</body>
+</html>
